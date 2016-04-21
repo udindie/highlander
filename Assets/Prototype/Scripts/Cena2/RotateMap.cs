@@ -10,7 +10,8 @@ public class RotateMap : MonoBehaviour {
 	public Transform target;
 	public bool stopTime = false;
 	public float duration = 2.5f;
-	public float cooldown = 5f;
+    public float rotateDuration = 100f;
+	public float cooldown = 1f;
 	public bool active = true;
 	bool rotate = false;
 	public float startAngle;
@@ -28,7 +29,7 @@ public class RotateMap : MonoBehaviour {
 			if(stopTime){
 				Configuration.Instance.UpdateTimescale(0f,null);
 			}
-			Invoke("EndPower", duration);
+            Invoke("EndPower", duration);
 		}
 		if(rotate){
 			Rotate();
@@ -53,6 +54,7 @@ public class RotateMap : MonoBehaviour {
 	}
 
 	void EndPower(){
+        Debug.Log("ENDPOWER BEING CALLED");
 		rotate = false;
 		startAngle = (startAngle + rotationAngle) % 360;
 		target.rotation= Quaternion.AngleAxis(startAngle, Vector3.forward);
@@ -70,9 +72,10 @@ public class RotateMap : MonoBehaviour {
 		lasttime = time;
 		time = Time.time;
 		float finalAngle = startAngle + rotationAngle;
-		float speed = rotationAngle / duration;
+        float speed = rotationAngle / rotateDuration;
 
 		Quaternion newRotation = Quaternion.AngleAxis(finalAngle, Vector3.forward);
 	 	target.rotation= Quaternion.Slerp(target.rotation, newRotation, speed * (time - lasttime));
+
 	}
 }
